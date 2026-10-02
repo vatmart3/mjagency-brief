@@ -564,10 +564,9 @@ noscript p{max-width:640px;margin:40px auto;padding:0 16px;font-size:16px}
 var KEY = 'mjBriefDraft_v1';
 var AGENCY = {
   name:'Jérémy Vatuone',
-  email:'jeremyvatuonepro@gmail.com',
+  email:'mjagency.officiel@gmail.com',
   phone:'06 11 71 83 68',
-  tel:'+33611718368',
-  footer:'MJAGENCY · 54 rue Marceau, 34200 Sète · SIRET 992 328 120 00017 · jeremyvatuonepro@gmail.com · 06 11 71 83 68'
+  tel:'+33611718368'
 };
 var CONSENT_TXT = 'J’accepte que MJAGENCY utilise ces informations pour préparer ma proposition et la création de mon site. Elles ne sont transmises à aucun tiers.';
 
@@ -1671,16 +1670,23 @@ function buildPDF(J){
   txt('Agence web · Sète, Bassin de Thau', bx + 5, y + 33);
   y += box + 6;
 
-  /* ——— Pieds de page ——— */
+  /* ——— Pieds de page : le logo en petit et le nom, rien d'autre ——— */
   var n = doc.getNumberOfPages();
+  var LS = 4.6, LG = 1.8, LY = H - 13;
+  font('bold', 7.5);
+  var lw = doc.getTextWidth('MJAGENCY') + 0.3 * 7;
+  var lx = (W - (LS + LG + lw)) / 2;
   for (var pg = 1; pg <= n; pg++) {
     doc.setPage(pg);
-    dc(C.line); doc.setLineWidth(0.25); doc.line(M, H - 14, W - M, H - 14);
-    var fsz = 6.8; font('normal', fsz);
-    var foot = T(AGENCY.footer);
-    while (doc.getTextWidth(foot) > CW - 16 && fsz > 5) { fsz -= 0.2; doc.setFontSize(fsz); }
-    tc(C.muted); doc.text(foot, M, H - 9.6);
-    font('bold', 7); tc(C.ink); doc.text(pg + ' / ' + n, W - M, H - 9.6, {align:'right'});
+    doc.setFillColor(C.ink[0], C.ink[1], C.ink[2]);
+    doc.roundedRect(lx, LY, LS, LS, 1.1, 1.1, 'F');
+    font('bold', 5.6); doc.setTextColor(255, 255, 255);
+    doc.text('MJ', lx + 0.75, LY + 3.05);
+    doc.setFillColor(C.blue[0], C.blue[1], C.blue[2]);
+    doc.circle(lx + LS - 0.95, LY + 2.75, 0.36, 'F');
+    font('bold', 7.5); tc(C.ink); doc.setCharSpace(0.3);
+    doc.text('MJAGENCY', lx + LS + LG, LY + 3.2);
+    doc.setCharSpace(0);
   }
   doc.setProperties({title:T('Brief site web - ' + (company || 'MJAGENCY') + ' - ' + ref), author:'MJAGENCY', creator:'MJAGENCY'});
   return doc;
